@@ -16,6 +16,7 @@
 - 选择LAMP环境（安装Apache）
 - 新建网站，将文件全部复制到网站目录下
 - 绑定域名访问后，会自动创建date文件夹
+
 ## 错误解决
 - 如遇PHP8.2错误切换PHP8.0
 - 如遇子页面打开404 nignx 请切换Apache nignx环境下无法访问子页面
@@ -24,7 +25,7 @@
 - 访问：http://localhost/admin.php
 - 默认密码：`12345678`
 
-## ClawCloud Run 免费套餐 快速安装
+### ClawCloud Run 免费套餐 快速安装
 - 新建APP项目
 - Image Name填写cunpeng/cpmynav:1.01
 - 建议CPU 0.2 +
@@ -32,25 +33,28 @@
 - 端口80
 - Local Storage中Mount Path填写/data
 
-## 📦 Docker快速开始
+#### 📦 使用 Docker Compose
+```yaml
+version: '1.0'
 
-- cunpeng/cpmynav:1.01
-### 
-```bash
-# 克隆项目
-git clone https://github.com/cunpeng/cpmynav.git
+services:
+  cpmynav:
+    image: cunpeng/cpmynav:1.01
+    ports:
+      - "8821:80"
+    volumes:
+      - cpmynav_data:/data
+    restart: unless-stopped
+    container_name: cpmynav_app
 
+volumes:
+  cpmynav_data:
 # 启动服务
 docker-compose up -d
 
 # 访问网站
 http://localhost:80
 ```
-
-### 管理员登录
-- 访问：http://localhost:8821/admin.php
-- 默认密码：`12345678`
-
 ## 📁 Docker项目结构
 ```
 version: '3.8'
