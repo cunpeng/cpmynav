@@ -26,7 +26,7 @@
 
 ## ClawCloud Run 免费套餐 快速安装
 - 新建APP项目
-- Image Name填写cunpeng/yyds:1.42
+- Image Name填写cunpeng/cpmynav:1.01
 - 建议CPU 0.2 +
 - 建议Memory256M +
 - 端口80
@@ -34,12 +34,11 @@
 
 ## 📦 Docker快速开始
 
-- cunpeng/yyds:1.42
-
-### 使用 Docker Compose
+- cunpeng/cpmynav:1.01
+### 
 ```bash
 # 克隆项目
-git clone https://github.com/cunpeng/cpmy.git
+git clone https://github.com/cunpeng/cpmynav.git
 
 # 启动服务
 docker-compose up -d
@@ -49,20 +48,79 @@ http://localhost:80
 ```
 
 ### 管理员登录
-- 访问：http://localhost:80/admin.php
+- 访问：http://localhost:8821/admin.php
 - 默认密码：`12345678`
 
 ## 📁 Docker项目结构
 ```
-yyds/
-├── docker-compose.yml    # Docker编排配置
-├── Dockerfile           # 镜像构建文件
-├── start.sh            # 启动脚本
-├── src/                # 源代码目录
-└── apache-config/      # Apache配置
+version: '3.8'
+
+services:
+  yyds:
+    image: cunpeng/cpmynav:1.00  # 使用指定的镜像
+    build: .  # 保留build用于本地开发
+    ports:
+      - "8821:80"  # 修改为8821端口
+    volumes:
+      - yyds_data:/data  # 使用命名卷
+    restart: unless-stopped
+    container_name: cpmynav_app  # 更新容器名称以匹配项目
+
+volumes:
+  yyds_data:  # 定义命名卷
+
 ```
+### 使用 Docker Compose（推荐）
+
+1. 下载 `docker-compose.yml` 文件：
+
+```yaml
+version: '3.8'
+
+services:
+  cpmynav:
+    image: cunpeng/cpmynav:1.00
+    ports:
+      - "8821:80"
+    volumes:
+      - cpmynav_data:/data
+    restart: unless-stopped
+    container_name: cpmynav_app
+
+volumes:
+  cpmynav_data:
+# 启动服务
+
+bash
+docker-compose up -d
+访问应用：
+
+网站首页：http://localhost:8821
+
+管理后台：http://localhost:8821/admin.php
+
+默认密码：wucunpeng
+
+使用 Docker Run
+
+使用 Docker Run
+bash
+docker run -d \
+  --name cpmynav_app \
+  -p 8821:80 \
+  -v cpmynav_data:/data \
+  --restart unless-stopped \
+  cunpeng/cpmynav:1.00
+
 
 ## 🔧 部署
 ```bash
-docker push cunpeng/cpmynav:1.00
+docker push cunpeng/cpmynav:1.01
 ```
+📝 更新日志
+v1.00 (2024-XX-XX)
+✨ 初始版本发布
+
+🐳 完整的 Docker 支持
+
+📱 响应式界面设计
