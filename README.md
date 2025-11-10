@@ -25,7 +25,7 @@
 - 访问：http://localhost/admin.php
 - 默认密码：`12345678`
 
-## ClawCloud Run 免费套餐 快速安装
+## 📁 ClawCloud Run 免费套餐 快速安装
 - 新建APP项目
 - Image Name填写cunpeng/cpmynav:1.01
 - 建议CPU 0.2 +
@@ -33,7 +33,7 @@
 - 端口80
 - Local Storage中Mount Path填写/data
 
-## 📁 Docker部署
+## 🐳 Docker部署
 ```bash
 docker push cunpeng/cpmynav:1.01
 ```
@@ -63,20 +63,18 @@ docker-compose up -d
 管理后台：http://localhost:8821/admin.php
 默认密码：12345678
 
-#### 使用 Docker Run
-
+## 使用⚙️ Docker Run
+```
 docker run -d \
   --name cpmynav_app \
   -p 8821:80 \
   -v cpmynav_data:/data \
   --restart unless-stopped \
   cunpeng/cpmynav:1.01
-  
+```
 
-📝 更新日志
-v1.00 (2024-XX-XX)
-✨ 初始版本发布
+## 📝 更新日志
+v1.00 (2025-05-22)
+v1.01 (2025-08-25)
 
-🐳 完整的 Docker 支持
-
-📱 响应式界面设计
+## ✨ 赞赏
