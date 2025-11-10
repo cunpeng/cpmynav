@@ -74,7 +74,9 @@ docker run -d \
 ```
 
 ## 📝 更新日志
-v1.00 (2025-05-22)
-v1.01 (2025-08-25)
+- v1.00 (2025-05-22)
+- v1.01 (2025-08-25)
 
 ## ✨ 赞赏
+![wechat-pay](https://github.com/user-attachments/assets/fd7730d2-a2b0-4e6f-ba99-2c668f4b1583)
+
