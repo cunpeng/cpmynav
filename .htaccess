@@ -1,0 +1,16 @@
+RewriteEngine On
+
+# 如果请求的不是真实文件或目录
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# 重写到index.php
+RewriteRule ^(.*)$ index.php?path=$1 [QSA,L]
+
+# 设置目录索引文件
+DirectoryIndex index.php index.html
+
+# 设置缓存头（可选，提升性能）
+<FilesMatch "\.(jpg|jpeg|png|gif|ico|css|js)$">
+    Header set Cache-Control "max-age=2592000"
+</FilesMatch>
