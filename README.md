@@ -25,7 +25,7 @@
 - 访问：http://localhost/admin.php
 - 默认密码：`12345678`
 
-### ClawCloud Run 免费套餐 快速安装
+## ClawCloud Run 免费套餐 快速安装
 - 新建APP项目
 - Image Name填写cunpeng/cpmynav:1.01
 - 建议CPU 0.2 +
