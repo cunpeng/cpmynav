@@ -77,6 +77,10 @@ docker run -d \
 - v1.00 (2025-05-22)
 - v1.01 (2025-08-25)
 
-## ✨ 赞赏
-![wechat-pay](https://github.com/user-attachments/assets/fd7730d2-a2b0-4e6f-ba99-2c668f4b1583)
+## ✨ 授权码
+- 授权码仅限当日使用有效
+- 交流售后QQ群333628217
+
+## 👨‍💻 支持作者
+![wechat-pay](https://github.com/user-attachments/assets/0926f261-1b00-4d8b-b9d3-49dcc980143b)
 
