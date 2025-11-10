@@ -70,16 +70,16 @@ volumes:
   yyds_data:  # 定义命名卷
 
 ```
-### 使用 Docker Compose（推荐）
+### 使用 Docker Compose
 
-1. 下载 `docker-compose.yml` 文件：
+`docker-compose.yml` 文件：
 
 ```yaml
-version: '3.8'
+version: '1.0'
 
 services:
   cpmynav:
-    image: cunpeng/cpmynav:1.00
+    image: cunpeng/cpmynav:1.01
     ports:
       - "8821:80"
     volumes:
@@ -89,17 +89,15 @@ services:
 
 volumes:
   cpmynav_data:
-# 启动服务
+
 
 bash
 docker-compose up -d
+## 📁 Docker项目结构
 访问应用：
-
 网站首页：http://localhost:8821
-
 管理后台：http://localhost:8821/admin.php
-
-默认密码：wucunpeng
+默认密码：12345678
 
 使用 Docker Run
 
