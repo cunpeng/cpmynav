@@ -33,11 +33,11 @@
 - 端口80
 - Local Storage中Mount Path填写/data
 
-#### 🔧 Docker部署
+## 📁 Docker部署
 ```bash
 docker push cunpeng/cpmynav:1.01
 ```
-#### 📦 使用 Docker Compose
+## 📦 使用 Docker Compose
 ```yaml
 version: '1.0'
 
