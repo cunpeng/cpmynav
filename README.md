@@ -37,6 +37,7 @@
 ```bash
 docker push cunpeng/cpmynav:1.01
 ```
+- https://hub.docker.com/r/cunpeng/cpmynav
 ## 📦 使用 Docker Compose
 ```yaml
 version: '1.0'
