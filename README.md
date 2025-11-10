@@ -37,6 +37,15 @@
 ```
 docker pull cunpeng/cpmynav:1.01
 ```
+Docker Run
+```
+docker run -d \
+  --name cpmynav_app \
+  -p 8821:80 \
+  -v cpmynav_data:/data \
+  --restart unless-stopped \
+  cunpeng/cpmynav:1.01
+```
 - https://hub.docker.com/r/cunpeng/cpmynav
 ## 📦 使用 Docker Compose
 ```yaml
@@ -64,15 +73,6 @@ docker-compose up -d
 管理后台：http://localhost:8821/admin.php
 默认密码：12345678
 
-## 使用⚙️ Docker Run
-```
-docker run -d \
-  --name cpmynav_app \
-  -p 8821:80 \
-  -v cpmynav_data:/data \
-  --restart unless-stopped \
-  cunpeng/cpmynav:1.01
-```
 
 ## 📝 更新日志
 - v1.00 (2025-05-22)
