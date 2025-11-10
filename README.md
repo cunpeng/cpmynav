@@ -49,11 +49,6 @@ services:
 
 volumes:
   cpmynav_data:
-# 启动服务
-docker-compose up -d
-
-# 访问网站
-http://localhost:80
 ```
 ## 📁 Docker项目结构
 ```
