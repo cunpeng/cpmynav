@@ -34,8 +34,8 @@
 - Local Storage中Mount Path填写/data
 
 ## 🐳 Docker部署
-```bash
-docker push cunpeng/cpmynav:1.01
+```
+docker pull cunpeng/cpmynav:1.01
 ```
 - https://hub.docker.com/r/cunpeng/cpmynav
 ## 📦 使用 Docker Compose
