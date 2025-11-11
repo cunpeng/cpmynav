@@ -26,7 +26,8 @@ if (!file_exists(DATA_FILE)) {
         'footerCopyright' => '© 我的导航站. All rights reserved.',
         'showStats' => true, // 默认显示统计信息
         'showStatsInAdmin' => true,
-        'license_verified' => false  // 新增授权状态字段
+        'license_verified' => false,  // 新增授权状态字段
+        'showBreadcrumb' => true  // 新增：默认显示面包屑导航
     ];
     file_put_contents(DATA_FILE, json_encode($defaultData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     chmod(DATA_FILE, 0644);

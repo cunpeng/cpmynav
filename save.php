@@ -35,6 +35,9 @@ try {
         // 保存统计显示设置
         $data['showStats'] = isset($_POST['showStats']);
         
+            // 新增：保存面包屑导航显示设置
+    $data['showBreadcrumb'] = isset($_POST['showBreadcrumb']);
+    
         // 保存版权信息
         $data['footerCopyright'] = $_POST['footerCopyright'] ?? '';
     } else {
@@ -95,14 +98,15 @@ try {
                 'visible' => $visible
             ];
             
-            // 如果是二维码类型，保存二维码内容
-            if ($isQRCode) {
-                if (empty($qrcodeContent)) {
-                    throw new Exception('二维码内容不能为空');
-                }
-                $linkData['qrcodeContent'] = $qrcodeContent;
-                $linkData['url'] = "qrcode_display.php?content=" . rawurlencode($qrcodeContent);
-            }
+// 如果是二维码类型，保存二维码内容
+if ($isQRCode) {
+    if (empty($qrcodeContent)) {
+        throw new Exception('二维码内容不能为空');
+    }
+    $linkData['qrcodeContent'] = $qrcodeContent;
+    // 使用绝对路径
+    $linkData['url'] = "/qrcode_display.php?content=" . rawurlencode($qrcodeContent);
+}
             
             $links[] = $linkData;
             

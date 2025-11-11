@@ -95,9 +95,9 @@ $links = $currentPage['links'];
             display: flex;
             flex-direction: column;
         }
-        .header { text-align: center; margin: 20px 0; }
+        .header { text-align: center; margin: 5px 0; }
         .site-name { color: #1a1a1a; font-size: 2.5rem; margin-bottom: 10px; }
-        .breadcrumb { margin-bottom: 20px; text-align: center; }
+        .breadcrumb { margin: 0 0 15px; text-align: center; }
         .breadcrumb a { color: #007bff; text-decoration: none; }
         .breadcrumb span { margin: 0 5px; color: #666; }
         .nav-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
@@ -139,6 +139,23 @@ $links = $currentPage['links'];
         <div class="header">
             <h1 class="site-name"><?= htmlspecialchars($pageId === 'home' ? $siteName : $currentPage['title']) ?></h1>
         </div>
+        
+                <!-- 面包屑导航：根据后台设置显示 -->
+        <?php if (($data['showBreadcrumb'] ?? true) && $pageId !== 'home'): ?>
+        <div class="breadcrumb">
+            <?php foreach ($breadcrumbs as $index => $crumb): ?>
+                <?php if ($index > 0): ?>
+                    <span>/</span>
+                <?php endif; ?>
+                <?php if ($index < count($breadcrumbs) - 1): ?>
+                    <a href="<?= htmlspecialchars($crumb['url']) ?>"><?= htmlspecialchars($crumb['title']) ?></a>
+                <?php else: ?>
+                    <span><?= htmlspecialchars($crumb['title']) ?></span>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+        
         <!-- 在index.php中找到导航列表部分，更新二维码链接 -->
         <div class="nav-list">
             <?php foreach ($links as $link): ?>
@@ -154,17 +171,18 @@ $links = $currentPage['links'];
                     $target = '';
                     $url = $link['url'];
                     
-                    if (isset($link['isPage']) && $link['isPage']) {
-                        // 子页面链接
-                        $target = '';
-                    } elseif (isset($link['isQRCode']) && $link['isQRCode']) {
-                        // 二维码链接 - 使用新的显示页面
-                        $target = '';
-                        if (strpos($url, 'qrcode_display.php') === false && !empty($link['qrcodeContent'])) {
-                            $url = "qrcode_display.php?content=" . rawurlencode($link['qrcodeContent']);
-                        }
-                    } else {
-                        // 外部链接
+            if (isset($link['isPage']) && $link['isPage']) {
+                // 子页面链接
+                $target = '';
+            } elseif (isset($link['isQRCode']) && $link['isQRCode']) {
+                // 二维码链接 - 使用绝对路径
+                $target = '';
+                if (!empty($link['qrcodeContent'])) {
+                    // 使用绝对路径，确保在任何子页面都能正确访问
+                    $url = "/qrcode_display.php?content=" . rawurlencode($link['qrcodeContent']);
+                }
+            } else {
+                // 外部链接
                         $target = 'target="_blank"';
                     }
                     ?>

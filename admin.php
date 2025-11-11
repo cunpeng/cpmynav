@@ -104,6 +104,52 @@ if(!isset($_SESSION['loggedin'])) {
             button { background: #007bff; color: white; border: none; padding: 0.8rem; border-radius: 8px; width: 100%; cursor: pointer; }
             .error { color: red; margin-bottom: 1rem; text-align: center; }
             .success { color: green; margin-bottom: 1rem; text-align: center; }
+            
+            /* 在现有的CSS样式中添加以下代码 */
+
+/* 拖拽容器优化 */
+.sortable-links {
+    max-height: 60vh; /* 容器最大高度为视口的60% */
+    overflow-y: auto; /* 启用垂直滚动 */
+    overflow-x: hidden; /* 隐藏水平滚动 */
+    padding: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    scroll-behavior: smooth; /* 平滑滚动 */
+}
+
+/* 拖拽时的边缘提示 */
+.sortable-links.drag-active::before,
+.sortable-links.drag-active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 30px;
+    pointer-events: none;
+    opacity: 0.5;
+    z-index: 10;
+    transition: opacity 0.2s ease;
+}
+
+.sortable-links.drag-active::before {
+    top: 0;
+    background: linear-gradient(to bottom, rgba(0,123,255,0.1) 0%, transparent 100%);
+}
+
+.sortable-links.drag-active::after {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0,123,255,0.1) 0%, transparent 100%);
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    .sortable-links {
+        max-height: 50vh; /* 移动端稍微小一点 */
+    }
+}
+
         </style>
     </head>
     <body>
@@ -455,6 +501,14 @@ if ($currentPageId === 'home') {
                     </label>
                 </div>
                 
+                    <!-- 新增：面包屑导航显示开关 -->
+    <div class="visibility-toggle">
+        <label>
+            <input type="checkbox" name="showBreadcrumb" value="1" <?= ($data['showBreadcrumb'] ?? true) ? 'checked' : '' ?>>
+            显示子页面路径（点击路径/可返回上级）
+        </label>
+    </div>
+                
                 <!-- 版权信息输入框 -->
                 <div class="form-section">
                     <textarea name="footerCopyright" placeholder="底部版权信息（支持HTML代码）" rows="2"><?= htmlspecialchars($data['footerCopyright'] ?? '© 我的导航站. All rights reserved.') ?></textarea>
@@ -492,11 +546,11 @@ if ($currentPageId === 'home') {
                         
                         <!-- 修复：显示原始URL而不是编码后的 -->
                         <?php if (isset($link['isQRCode']) && $link['isQRCode']): ?>
-                            <div class="url-display">
-                                <strong>二维码链接：</strong>qrcode.php?content=<?= htmlspecialchars($link['qrcodeContent'] ?? '') ?>
-                            </div>
-                            <input type="hidden" name="link_urls[<?= $index ?>]" value="qrcode.php?content=<?= htmlspecialchars(rawurlencode($link['qrcodeContent'] ?? '')) ?>">
-                        <?php else: ?>
+    <div class="url-display">
+        <strong>二维码链接：</strong>/qrcode_display.php?content=<?= htmlspecialchars($link['qrcodeContent'] ?? '') ?>
+    </div>
+    <input type="hidden" name="link_urls[<?= $index ?>]" value="/qrcode_display.php?content=<?= htmlspecialchars(rawurlencode($link['qrcodeContent'] ?? '')) ?>">
+<?php else: ?>
                             <input type="text" name="link_urls[<?= $index ?>]" placeholder="链接地址" value="<?= htmlspecialchars($link['url']) ?>">
                         <?php endif; ?>
                         
@@ -650,22 +704,80 @@ if ($currentPageId === 'home') {
         // 生成唯一ID
         let nextLinkId = <?= count($currentPage['links']) ?>;
 
-        // 初始化拖拽排序
-        document.addEventListener('DOMContentLoaded', function() {
-            const sortable = new Sortable(document.getElementById('links'), {
-                animation: 150,
-                handle: '.drag-handle',
-                ghostClass: 'sortable-ghost',
-                chosenClass: 'sortable-chosen',
-                dragClass: 'sortable-drag',
-                onEnd: function(evt) {
-                    updateLinkNumbers();
-                }
-            });
-            
-            // 初始更新链接编号
+// 初始化拖拽排序 - 修复版
+document.addEventListener('DOMContentLoaded', function() {
+    const sortableContainer = document.getElementById('links');
+    
+    const sortable = new Sortable(sortableContainer, {
+        animation: 200,
+        handle: '.drag-handle',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        
+        // 增强的滚动配置
+        scroll: true,
+        scrollSensitivity: 30, // 距离边缘30像素开始滚动
+        scrollSpeed: 15, // 滚动速度
+        scrollInterval: 10, // 滚动间隔
+        forceAutoScrollFallback: true, // 强制使用自动滚动回退方案
+        bubbleScroll: true, // 允许冒泡滚动
+        
+        // 事件处理
+        onStart: function(evt) {
+            // 启用页面滚动
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
+        },
+        
+        onEnd: function(evt) {
             updateLinkNumbers();
-        });
+            
+            // 恢复滚动设置
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+        }
+    });
+    
+    // 初始更新链接编号
+    updateLinkNumbers();
+    
+    // 启用自定义边缘滚动检测
+    enableEdgeScrolling(sortableContainer);
+});
+
+// 自定义边缘滚动函数
+function enableEdgeScrolling(container) {
+    let scrollInterval;
+    
+    container.addEventListener('mousemove', function(e) {
+        if (scrollInterval) {
+            clearInterval(scrollInterval);
+        }
+        
+        const rect = container.getBoundingClientRect();
+        const edgeThreshold = 40; // 距离边缘40像素开始滚动
+        
+        const isNearTop = e.clientY < rect.top + edgeThreshold;
+        const isNearBottom = e.clientY > rect.bottom - edgeThreshold;
+        
+        if (isNearTop || isNearBottom) {
+            const scrollDirection = isNearTop ? -1 : 1;
+            const scrollAmount = 8; // 每次滚动的像素数
+            
+            scrollInterval = setInterval(function() {
+                container.scrollTop += scrollDirection * scrollAmount;
+            }, 16); // 约60fps
+        }
+    });
+    
+    container.addEventListener('mouseleave', function() {
+        if (scrollInterval) {
+            clearInterval(scrollInterval);
+            scrollInterval = null;
+        }
+    });
+}
 
         function updateLinkNumbers() {
             const links = document.querySelectorAll('.link-inputs');
@@ -678,12 +790,12 @@ if ($currentPageId === 'home') {
             });
         }
 
-        function addLink() {
-            const div = document.createElement('div');
-            div.className = 'link-inputs';
-            const newIndex = nextLinkId++;
-            div.setAttribute('data-index', newIndex);
-            div.innerHTML = `
+function addLink() {
+    const div = document.createElement('div');
+    div.className = 'link-inputs';
+    const newIndex = nextLinkId++;
+    div.setAttribute('data-index', newIndex);
+    div.innerHTML = `
                 <div class="link-header">
                     <div class="link-title">链接 #${document.querySelectorAll('.link-inputs').length + 1}: 新链接</div>
                     <div class="drag-handle" title="拖拽移动排序"></div>
@@ -763,27 +875,26 @@ if ($currentPageId === 'home') {
                         urlInput.value = '/<?= $currentPageId === 'home' ? '' : $currentPageId . '/' ?>page';
                     }
                 }
-            } else if (select.value === 'qrcode') {
-                urlInput.type = 'text';
-                urlInput.placeholder = "二维码链接将自动生成";
-                
-                // 修复：显示原始内容而不是编码后的URL
-                if (qrcodeTextarea && qrcodeTextarea.value) {
-                    const content = qrcodeTextarea.value;
-                    // 只对URL进行编码，但显示原始内容
-                    urlInput.value = "qrcode.php?content=" + content;
-                } else {
-                    urlInput.value = "qrcode.php?content=";
-                }
-                
-                urlInput.required = false;
-                qrcodeContent.style.display = 'block';
-                
-                // 如果二维码内容为空，提供默认提示
-                if (!qrcodeTextarea.value) {
-                    qrcodeTextarea.value = "请输入二维码内容";
-                }
-            } else {
+    } else if (select.value === 'qrcode') {
+        urlInput.type = 'text';
+        urlInput.placeholder = "二维码链接将自动生成";
+        
+        // 修复：使用绝对路径
+        if (qrcodeTextarea && qrcodeTextarea.value) {
+            const content = qrcodeTextarea.value;
+            urlInput.value = "/qrcode_display.php?content=" + content;
+        } else {
+            urlInput.value = "/qrcode_display.php?content=";
+        }
+        
+        urlInput.required = false;
+        qrcodeContent.style.display = 'block';
+        
+        // 如果二维码内容为空，提供默认提示
+        if (!qrcodeTextarea.value) {
+            qrcodeTextarea.value = "请输入二维码内容";
+        }
+    } else {
                 urlInput.type = 'url';
                 urlInput.placeholder = "链接地址";
                 
