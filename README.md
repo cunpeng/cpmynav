@@ -52,7 +52,7 @@ docker run -d \
 ## 📦 使用 Docker Compose
 ```yaml
 services:
-  yyds:
+  cpmynav:
     build: .
     image: cunpeng/cpmynav:1.02
     ports:
