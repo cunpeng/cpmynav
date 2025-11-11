@@ -43,7 +43,7 @@ docker run -d \
   --name cpmynav_app \
   -p 8821:80 \
   -v cpmynav_data:/data \
- # -e TZ=Asia/Shanghai \
+#      - TZ=Asia/Shanghai  # 设置为上海时区，可根据需要修改
   --restart unless-stopped \
   cunpeng/cpmynav:1.02
 ```
