@@ -44,7 +44,7 @@ docker run -d \
   --name cpmynav_app \
   -p 8821:80 \
   -v cpmynav_data:/data \
-  -e TZ=Asia/Shanghai \  # 设置时区，可修改为其他时区
+  -e TZ=Asia/Shanghai \
   --restart unless-stopped \
   cunpeng/cpmynav:1.02
 ```
@@ -61,7 +61,7 @@ services:
     volumes:
       - cpmynav_data:/data
     environment:
-#      - TZ=Asia/Shanghai  # 设置为上海时区，可根据需要修改
+#      - TZ=Asia/Shanghai
     restart: unless-stopped
     container_name: cpmynav_app
 
