@@ -38,7 +38,7 @@
 ```
 docker pull cunpeng/cpmynav:1.03
 ```
-Docker Run
+- Docker Run
 ```bash
 docker run -d \
   --name cpmynav_app \
@@ -82,7 +82,7 @@ docker-compose up -d
 - v1.00 (2025-05-22)
 - v1.01 (2025-08-25)
 - v1.02 (2025-09-22)
-- v1.02 (2025-11-11)
+- v1.03 (2025-11-11)
 
 ## ✨ 授权码
 - 授权码仅限当日使用有效
