@@ -19,7 +19,8 @@
 
 ## 错误解决
 - 如遇PHP8.2错误切换PHP8.0
-- 如遇子页面打开404 nignx 请切换Apache nignx环境下无法访问子页面
+- 如遇子页面打开404 nignx 请切换Apache
+- nignx环境下无法访问子页面
 
 ## 管理员登录
 - 访问：http://localhost/admin.php
@@ -72,9 +73,9 @@ volumes:
 docker-compose up -d
 ```
 访问应用：
-网站首页：http://localhost:8821
-管理后台：http://localhost:8821/admin.php
-默认密码：12345678
+- 网站首页：http://localhost:8821
+- 管理后台：http://localhost:8821/admin.php
+- 默认密码：12345678
 
 
 ## 📝 更新日志
