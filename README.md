@@ -35,7 +35,7 @@
 
 ## 🐳 Docker部署
 ```
-docker pull cunpeng/cpmynav:1.01
+docker pull cunpeng/cpmynav:1.02
 ```
 Docker Run
 ```
@@ -43,26 +43,28 @@ docker run -d \
   --name cpmynav_app \
   -p 8821:80 \
   -v cpmynav_data:/data \
+ # -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  cunpeng/cpmynav:1.01
+  cunpeng/cpmynav:1.02
 ```
 - https://hub.docker.com/r/cunpeng/cpmynav
 ## 📦 使用 Docker Compose
 ```yaml
-version: '1.0'
-
 services:
-  cpmynav:
-    image: cunpeng/cpmynav:1.01
+  yyds:
+    build: .
+    image: cunpeng/cpmynav:1.02
     ports:
       - "8821:80"
     volumes:
-      - cpmynav_data:/data
+      - yyds_data:/data
+    environment:
+#      - TZ=Asia/Shanghai  # 设置为上海时区，可根据需要修改
     restart: unless-stopped
     container_name: cpmynav_app
 
 volumes:
-  cpmynav_data:
+  yyds_data:
 ```
 启动服务
 ```
@@ -77,6 +79,7 @@ docker-compose up -d
 ## 📝 更新日志
 - v1.00 (2025-05-22)
 - v1.01 (2025-08-25)
+- v1.02 (2025-11-11)
 
 ## ✨ 授权码
 - 授权码仅限当日使用有效
