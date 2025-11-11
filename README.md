@@ -66,7 +66,7 @@ services:
     container_name: cpmynav_app
 
 volumes:
-  yyds_data:
+  cpmynav_data:
 ```
 启动服务
 ```
