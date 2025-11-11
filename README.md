@@ -38,14 +38,15 @@
 docker pull cunpeng/cpmynav:1.02
 ```
 Docker Run
-```
+```bash
 docker run -d \
   --name cpmynav_app \
   -p 8821:80 \
   -v cpmynav_data:/data \
-#      - TZ=Asia/Shanghai  # 设置为上海时区，可根据需要修改
+  -e TZ=Asia/Shanghai \  # 设置时区，可修改为其他时区
   --restart unless-stopped \
   cunpeng/cpmynav:1.02
+```
 ```
 - https://hub.docker.com/r/cunpeng/cpmynav
 ## 📦 使用 Docker Compose
