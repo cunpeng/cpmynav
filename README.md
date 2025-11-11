@@ -47,8 +47,8 @@ docker run -d \
   --restart unless-stopped \
   cunpeng/cpmynav:1.02
 ```
-```
 - https://hub.docker.com/r/cunpeng/cpmynav
+
 ## 📦 使用 Docker Compose
 ```yaml
 services:
@@ -58,7 +58,7 @@ services:
     ports:
       - "8821:80"
     volumes:
-      - yyds_data:/data
+      - cpmynav_data:/data
     environment:
 #      - TZ=Asia/Shanghai  # 设置为上海时区，可根据需要修改
     restart: unless-stopped
