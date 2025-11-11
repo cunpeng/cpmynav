@@ -61,7 +61,7 @@ services:
     volumes:
       - cpmynav_data:/data
     environment:
-#      - TZ=Asia/Shanghai
+      - TZ=Asia/Shanghai
     restart: unless-stopped
     container_name: cpmynav_app
 
