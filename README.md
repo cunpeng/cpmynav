@@ -28,7 +28,7 @@
 
 ## 📁 ClawCloud Run 免费套餐 快速安装
 - 新建APP项目
-- Image Name填写cunpeng/cpmynav:1.01
+- Image Name填写cunpeng/cpmynav:1.03
 - 建议CPU 0.2 +
 - 建议Memory256M +
 - 端口80
@@ -36,7 +36,7 @@
 
 ## 🐳 Docker部署
 ```
-docker pull cunpeng/cpmynav:1.02
+docker pull cunpeng/cpmynav:1.03
 ```
 Docker Run
 ```bash
@@ -46,7 +46,7 @@ docker run -d \
   -v cpmynav_data:/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  cunpeng/cpmynav:1.02
+  cunpeng/cpmynav:1.03
 ```
 - https://hub.docker.com/r/cunpeng/cpmynav
 
@@ -55,7 +55,7 @@ docker run -d \
 services:
   cpmynav:
     build: .
-    image: cunpeng/cpmynav:1.02
+    image: cunpeng/cpmynav:1.03
     ports:
       - "8821:80"
     volumes:
@@ -81,6 +81,7 @@ docker-compose up -d
 ## 📝 更新日志
 - v1.00 (2025-05-22)
 - v1.01 (2025-08-25)
+- v1.02 (2025-09-22)
 - v1.02 (2025-11-11)
 
 ## ✨ 授权码
