@@ -10,7 +10,7 @@
 ## 🛠 技术栈
 - PHP 8.2 + Apache
 - Docker + Docker Compose
-- 无需数据库
+- 免数据库
 
 ## 宝塔面板安装教程
 - 选择LAMP环境（安装Apache）
