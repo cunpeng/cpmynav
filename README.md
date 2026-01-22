@@ -1,4 +1,4 @@
-# cpmynav 我的导航站
+# CPMYNAV智能导航建站管理系统
 
 ## 🚀 功能特点
 - 📱 响应式设计，支持移动端
@@ -12,15 +12,52 @@
 - Docker + Docker Compose
 - 免数据库
 
-## 宝塔面板安装教程（暂停安装，请使用docker）
+## 宝塔面板安装教程
 - 选择LAMP环境（安装Apache）
 - 新建网站，将文件全部复制到网站目录下
 - 访问后，会自动创建date文件夹
+- Apache环境下 在根目录的 .htaccess 中添加：
+```
+<FilesMatch "^(data|data\.json|stats\.json)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+```
+- Nginx环境下
+ 打开宝塔面板
+网站 → 设置 → 配置文件
+在 server { ... } 块内， location / { ... } 之前添加：
+```
+# 保护敏感数据目录
+location ~ ^/data/(.*) {
+    deny all;
+    return 403;
+}
+
+# 保护备份目录
+location ~ ^/data/backups/(.*) {
+    deny all;
+    return 403;
+}
+
+# 保护配置文件（如果有暴露风险）
+location ~ ^/src/config_fixed.php$ {
+    deny all;
+    return 403;
+}
+```
+伪静态设置
+```
+location / {
+    try_files $uri $uri/ /index.php?path=$1;
+}
+```
+
 
 ## 错误解决
 - 如遇PHP8.2错误切换PHP8.0
 - 如遇子页面打开404 nignx 请切换Apache
-- nignx环境下无法访问子页面
+- nignx环境下无法访问子页面请设置伪静态
 
 ## 管理员登录
 - 访问：http://localhost/admin.php
@@ -28,7 +65,7 @@
 
 ## 📁 ClawCloud Run 免费套餐 快速安装
 - 新建APP项目
-- Image Name填写cunpeng/cpmynav:1.03
+- Image Name填写cunpeng/cpmynav:1.0
 - 建议CPU 0.2 +
 - 建议Memory256M +
 - 端口80
@@ -36,7 +73,7 @@
 
 ## 🐳 Docker部署
 ```
-docker pull cunpeng/cpmynav:1.03
+docker pull cunpeng/cpmynav:1.0
 ```
 - Docker Run
 ```bash
@@ -46,7 +83,7 @@ docker run -d \
   -v cpmynav_data:/data \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  cunpeng/cpmynav:1.03
+  cunpeng/cpmynav:1.0
 ```
 - https://hub.docker.com/r/cunpeng/cpmynav
 
@@ -55,7 +92,7 @@ docker run -d \
 services:
   cpmynav:
     build: .
-    image: cunpeng/cpmynav:1.03
+    image: cunpeng/cpmynav:1.0
     ports:
       - "8821:80"
     volumes:
@@ -83,6 +120,7 @@ docker-compose up -d
 - v1.01 (2025-08-25)
 - v1.02 (2025-09-22)
 - v1.03 (2025-11-11)
+- v1.0  (2026-01-22)
 
 ## ✨ 授权码
 - 授权码仅限当日使用有效
