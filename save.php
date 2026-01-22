@@ -13,13 +13,28 @@ if(empty($_POST['page'])) {
     die('无效的提交数据：页面ID为空');
 }
 
+// 健康检查
+if (!check_health()) {
+    header('HTTP/1.1 500 Internal Server Error');
+    die('系统数据异常，请检查数据文件');
+}
+
 // 创建备份文件
 $backupFile = BACKUP_DIR . 'data_' . date('Ymd_His') . '.json';
-if(!is_dir(BACKUP_DIR)) mkdir(BACKUP_DIR, 0755, true);
-copy(DATA_FILE, $backupFile);
+if(!is_dir(BACKUP_DIR)) {
+    mkdir(BACKUP_DIR, 0755, true);
+}
 
 // 读取现有数据
-$data = json_decode(file_get_contents(DATA_FILE), true);
+$dataContent = file_get_contents(DATA_FILE);
+if ($dataContent === false) {
+    die('无法读取数据文件');
+}
+
+$data = json_decode($dataContent, true);
+if ($data === null) {
+    die('数据文件格式错误');
+}
 
 // 构建页面数据
 $pageId = $_POST['page'];
@@ -34,12 +49,38 @@ try {
         
         // 保存统计显示设置
         $data['showStats'] = isset($_POST['showStats']);
-        
+                
             // 新增：保存面包屑导航显示设置
     $data['showBreadcrumb'] = isset($_POST['showBreadcrumb']);
-    
+        
         // 保存版权信息
         $data['footerCopyright'] = $_POST['footerCopyright'] ?? '';
+        
+        // 保存样式配置
+        if (isset($_POST['siteName_fontSize'])) {
+            $data['styleConfig'] = [
+                'siteName' => [
+                    'fontSize' => $_POST['siteName_fontSize'] . 'rem',
+                    'color' => $_POST['siteName_color'] ?? '#1a1a1a',
+                    'marginBottom' => $_POST['siteName_marginBottom'] . 'px'
+                ],
+                'breadcrumb' => [
+                    'fontSize' => $_POST['breadcrumb_fontSize'] . 'px',
+                    'color' => $_POST['breadcrumb_color'] ?? '#666',
+                    'marginBottom' => $_POST['breadcrumb_marginBottom'] . 'px'
+                ],
+                'stats' => [
+                    'fontSize' => $_POST['stats_fontSize'] . 'px',
+                    'color' => $_POST['stats_color'] ?? '#666',
+                    'marginTop' => $_POST['stats_marginTop'] . 'px'
+                ],
+                'copyright' => [
+                    'fontSize' => $_POST['copyright_fontSize'] . 'px',
+                    'color' => $_POST['copyright_color'] ?? '#666',
+                    'marginTop' => $_POST['copyright_marginTop'] . 'px'
+                ]
+            ];
+        }
     } else {
         if(empty($_POST['pageTitle'])) {
             throw new Exception('页面标题不能为空');
@@ -98,6 +139,11 @@ try {
                 'visible' => $visible
             ];
             
+            // 保存链接样式配置（只保留文字颜色）
+            $linkData['style'] = [
+                'color' => $_POST['link_color'][$linkId] ?? '#1a1a1a'
+            ];
+            
 // 如果是二维码类型，保存二维码内容
 if ($isQRCode) {
     if (empty($qrcodeContent)) {
@@ -130,18 +176,30 @@ if ($isQRCode) {
         $data['pages'][$pageId]['links'] = $links;
     }
     
+    // 先备份当前文件
+    copy(DATA_FILE, $backupFile);
+    
     // 写入前检查JSON有效性
-    $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+    $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    if ($json === false) {
+        throw new Exception('数据编码失败');
+    }
     
     // 原子写入操作
     $tmpFile = tempnam(sys_get_temp_dir(), 'data_');
     file_put_contents($tmpFile, $json);
-    rename($tmpFile, DATA_FILE);
+    
+    if (!rename($tmpFile, DATA_FILE)) {
+        // 如果重命名失败，尝试直接写入
+        file_put_contents(DATA_FILE, $json);
+    }
 
     header('Location: admin.php?page=' . urlencode($pageId));
     exit;
 } catch (Exception $e) {
     // 恢复备份
-    copy($backupFile, DATA_FILE);
+    if (file_exists($backupFile)) {
+        copy($backupFile, DATA_FILE);
+    }
     die('保存失败: ' . $e->getMessage());
 }

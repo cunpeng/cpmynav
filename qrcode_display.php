@@ -1,23 +1,16 @@
 <?php
-// qrcode_display.php - 新的二维码显示页面，解决居中问题
-
-// 引入配置文件
 require_once 'config.php';
 
-// 获取二维码内容
 $content = $_GET['content'] ?? '';
 
-// 如果没有内容，显示错误
 if (empty($content)) {
     header("HTTP/1.0 404 Not Found");
     echo "二维码内容为空";
     exit;
 }
 
-// 正确解码内容
 $content = rawurldecode($content);
 
-// 设置页面标题
 $pageTitle = "二维码 - " . (strlen($content) > 30 ? substr($content, 0, 30) . "..." : $content);
 ?>
 <!DOCTYPE html>
@@ -50,8 +43,8 @@ $pageTitle = "二维码 - " . (strlen($content) > 30 ? substr($content, 0, 30) .
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* 垂直居中 */
-            align-items: center; /* 水平居中 */
+            justify-content: center;
+            align-items: center;
             text-align: center;
         }
         .qr-title {

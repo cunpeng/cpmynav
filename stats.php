@@ -1,10 +1,6 @@
 <?php
-// stats.php
-// 引入配置文件
+// stats.php - 简化版本，移除文件锁
 require_once 'config.php';
-
-// 修改统计文件路径
-$statsFile = STATS_FILE;
 
 // 初始化数据结构
 $defaultStats = [
@@ -30,46 +26,47 @@ function getClientIP() {
 }
 
 // 读取或初始化统计文件
-if (!file_exists($statsFile)) {
-    file_put_contents($statsFile, json_encode($defaultStats));
+if (!file_exists(STATS_FILE)) {
+    file_put_contents(STATS_FILE, json_encode($defaultStats));
+    chmod(STATS_FILE, 0644);
 }
 
-$fp = fopen($statsFile, 'r+');
-if (flock($fp, LOCK_EX)) { // 排他锁
-    $stats = json_decode(fread($fp, filesize($statsFile)), true) ?? $defaultStats;
-    
-    $today = date('Ymd');
-    $currentIP = getClientIP();
-    
-    // 每日数据初始化
-    if (!isset($stats['daily'][$today])) {
-        $stats['daily'][$today] = 0;
-    }
-    
-    // 同一IP 5分钟内不重复统计
-    if ($currentIP != $stats['last_ip'] || time() - $stats['ips'][$currentIP] > 300) {
-        $stats['total']++;
-        $stats['daily'][$today]++;
-        $stats['last_ip'] = $currentIP;
-        $stats['ips'][$currentIP] = time();
-    }
-    
-    // 清理过期IP记录（保留7天）
-    foreach ($stats['ips'] as $ip => $timestamp) {
-        if (time() - $timestamp > 604800) { // 7天
-            unset($stats['ips'][$ip]);
-        }
-    }
-    
-    // 保存数据
-    ftruncate($fp, 0);
-    fseek($fp, 0);
-    fwrite($fp, json_encode($stats, JSON_PRETTY_PRINT));
-    flock($fp, LOCK_UN);
+// 读取统计数据
+$statsContent = @file_get_contents(STATS_FILE);
+$stats = $statsContent ? json_decode($statsContent, true) : $defaultStats;
+
+if (!$stats) {
+    $stats = $defaultStats;
 }
-fclose($fp);
+
+$today = date('Ymd');
+$currentIP = getClientIP();
+
+// 每日数据初始化
+if (!isset($stats['daily'][$today])) {
+    $stats['daily'][$today] = 0;
+}
+
+// 同一IP 5分钟内不重复统计
+$lastVisitTime = $stats['ips'][$currentIP] ?? 0;
+if ($currentIP != $stats['last_ip'] || time() - $lastVisitTime > 300) {
+    $stats['total']++;
+    $stats['daily'][$today]++;
+    $stats['last_ip'] = $currentIP;
+    $stats['ips'][$currentIP] = time();
+}
+
+// 清理过期IP记录（保留7天）
+foreach ($stats['ips'] as $ip => $timestamp) {
+    if (time() - $timestamp > 604800) {
+        unset($stats['ips'][$ip]);
+    }
+}
+
+// 保存数据（简化写入，无文件锁）
+file_put_contents(STATS_FILE, json_encode($stats, JSON_PRETTY_PRINT));
 
 // 暴露统计变量
 $totalVisits = number_format($stats['total']);
-$todayVisits = number_format($stats['daily'][$today]);
+$todayVisits = number_format($stats['daily'][$today] ?? 0);
 ?>
