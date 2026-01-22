@@ -129,7 +129,7 @@ docker-compose up -d
 - https://github.com/cunpeng/cpmynav
 
 ## 👨‍💻 赞赏作者
-- https://github.com/user-attachments/assets/0926f261-1b00-4d8b-b9d3-49dcc980143b
+![wechat-pay](https://github.com/user-attachments/assets/0926f261-1b00-4d8b-b9d3-49dcc980143b)
 
 
 
