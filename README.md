@@ -62,6 +62,9 @@ location / {
 - 访问：http://localhost/admin.php
 - 默认密码：`12345678`
 
+## 数据迁移
+- 新网站文件迁移文件后，删除data文件，重新访问域名，重新生成data文件，复制原有数据data.json文件替换数据即可
+
 ## 📁 ClawCloud Run 免费套餐 快速安装
 - 新建APP项目
 - Image Name填写cunpeng/cpmynav:1.0
