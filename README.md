@@ -115,6 +115,7 @@ docker-compose up -d
 访问应用：
 - 网站首页：http://localhost:8821
 - 管理后台：http://localhost:8821/admin.php
+- 默认用户：admin
 - 默认密码：12345678
 
 ## 📝 更新日志
