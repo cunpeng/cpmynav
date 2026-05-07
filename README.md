@@ -60,6 +60,7 @@ location / {
 
 ## 管理员登录
 - 访问：http://localhost/admin.php
+- 默认用户：`admin`
 - 默认密码：`12345678`
 
 ## 数据迁移
