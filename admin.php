@@ -1022,6 +1022,23 @@ if ($currentPageId === 'home') {
                                     </label>
                                 </div>
                             </div>
+                            <div style="margin-bottom: 4px;">
+                                <div class="visibility-toggle">
+                                    <label style="display: block; margin-bottom: 6px;">电脑版每行链接数量</label>
+                                    <label style="display: inline-flex; align-items: center; margin-right: 16px;">
+                                        <input type="radio" name="linksPerRow" value="1" <?= ($data['linksPerRow'] ?? 2) == 1 ? 'checked' : '' ?>>
+                                        <span style="margin-left: 4px; font-size: 11px;">1个</span>
+                                    </label>
+                                    <label style="display: inline-flex; align-items: center; margin-right: 16px;">
+                                        <input type="radio" name="linksPerRow" value="2" <?= ($data['linksPerRow'] ?? 2) == 2 ? 'checked' : '' ?>>
+                                        <span style="margin-left: 4px; font-size: 11px;">2个</span>
+                                    </label>
+                                    <label style="display: inline-flex; align-items: center;">
+                                        <input type="radio" name="linksPerRow" value="3" <?= ($data['linksPerRow'] ?? 2) == 3 ? 'checked' : '' ?>>
+                                        <span style="margin-left: 4px; font-size: 11px;">3个</span>
+                                    </label>
+                                </div>
+                            </div>
                             <div style="display: flex; gap: 6px; align-items: center; font-size: 11px; color: #666; margin-bottom: 4px; padding: 4px 8px; background: #f8f9fa; border-radius: 4px;">
                                 <span style="min-width: 22px; color: #495057; font-weight: 500;">大小</span>
                                 <input type="text" name="breadcrumb_fontSize" placeholder="大小" value="<?= preg_replace('/[^-0-9.]/', '', $data['styleConfig']['breadcrumb']['fontSize'] ?? '16') ?>" oninput="this.value=this.value.replace(/[^-0-9.]/g,'')" style="width: 35px; padding: 2px 4px; font-size: 10px; border: 1px solid #ddd; border-radius: 3px; text-align: center;">

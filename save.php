@@ -53,6 +53,11 @@ try {
             // 新增：保存面包屑导航显示设置
     $data['showBreadcrumb'] = isset($_POST['showBreadcrumb']);
         
+        // 保存每行链接数量
+        $data['linksPerRow'] = isset($_POST['linksPerRow']) ? intval($_POST['linksPerRow']) : 2;
+        if ($data['linksPerRow'] < 1) $data['linksPerRow'] = 2;
+        if ($data['linksPerRow'] > 4) $data['linksPerRow'] = 4;
+        
         // 保存版权信息
         $data['footerCopyright'] = $_POST['footerCopyright'] ?? '';
         

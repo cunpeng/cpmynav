@@ -171,7 +171,7 @@ $links = $currentPage['links'];
                 font-size: <?= $data['styleConfig']['copyright']['fontSize'] ?? '14px' ?>;
             }
         }
-        .nav-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .nav-list { display: grid; grid-template-columns: repeat(<?= $data['linksPerRow'] ?? 2 ?>, 1fr); gap: 15px; }
         .nav-item { 
             background: #fff; 
             padding: 20px; 

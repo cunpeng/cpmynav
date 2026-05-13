@@ -74,6 +74,7 @@ if (!file_exists(DATA_FILE)) {
         'showStatsInAdmin' => true,
         'license_verified' => false,  // 新增授权状态字段
         'showBreadcrumb' => true,  // 新增：默认显示面包屑导航
+        'linksPerRow' => 2,  // 每行显示链接数量，默认2
         // 样式配置
         'styleConfig' => [
             'siteName' => [
