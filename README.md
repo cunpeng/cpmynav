@@ -76,18 +76,12 @@ location / {
 
 ## 🐳 Docker部署
 ```bash
-docker pull cunpeng/cpmynav:1.0
+docker pull cunpeng/cpmynav:1.1
 ```
 
 Docker Run
 ```
-docker run -d \
-  --name cpmynav_app \
-  -p 8821:80 \
-  -v cpmynav_data:/data \
-  -e TZ=Asia/Shanghai \
-  --restart unless-stopped \
-  cunpeng/cpmynav:1.0
+docker run -d --name cpmynav_app -p 8821:80 -v cpmynav_data:/data -e TZ=Asia/Shanghai --restart unless-stopped cunpeng/cpmynav:1.1
 ```
 
 ## 📦 使用 Docker Compose
@@ -125,7 +119,7 @@ docker-compose up -d
 - v1.02 (2025-09-22)
 - v1.03 (2025-11-11)
 - v1.0  (2026-01-22)
-- v1.1  (2026-05-13)
+- v1.1  (2026-05-13)小修正
 
 ## ✨ 授权码
 - 授权码仅限当日使用有效
