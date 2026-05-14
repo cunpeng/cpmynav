@@ -68,7 +68,7 @@ location / {
 
 ## 📁 ClawCloud Run 免费套餐 快速安装
 - 新建APP项目
-- Image Name填写cunpeng/cpmynav:1.0
+- Image Name填写cunpeng/cpmynav:1.1
 - 建议CPU 0.2 +
 - 建议Memory256M +
 - 端口80
@@ -90,7 +90,7 @@ services:
   services:
   cpmynav:
     build: .
-    image: cunpeng/cpmynav:1.0
+    image: cunpeng/cpmynav:1.1
     ports:
       - "8821:80"
     volumes:
