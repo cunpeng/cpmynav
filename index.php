@@ -75,8 +75,10 @@ if (empty($path)) {
     if (isset($data['pages'][$pageId])) {
         $currentPage = $data['pages'][$pageId];
     } else {
-        header("HTTP/1.0 404 Not Found");
-        echo "页面不存在";
+        // 页面不存在，统一显示 404 页面（3秒后自动跳转首页）
+        header("HTTP/1.1 404 Not Found");
+        header('Content-Type: text/html; charset=utf-8');
+        readfile(__DIR__ . '/404.html');
         exit;
     }
 }
