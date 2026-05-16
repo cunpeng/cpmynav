@@ -66,6 +66,13 @@ location / {
 ## 数据迁移
 - 新网站文件迁移文件后，删除data文件，重新访问域名，重新生成data文件，复制原有数据data.json文件替换数据即可
 
+## 📁飞牛fnOS ARM OECT 安装指南
+- Docker镜像仓库搜索cunpeng/cpmynav下载安装
+- 端口设置8821 80 TCP
+- 储存位置自定义
+- 安装成功后主机ip:8821打开即可
+- 特殊说明 数据迁移 不能直接替换文件 把数据复制粘贴即可
+
 ## 📁 ClawCloud Run 免费套餐 快速安装
 - 新建APP项目
 - Image Name填写cunpeng/cpmynav:1.1
