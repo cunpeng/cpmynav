@@ -1,5 +1,0 @@
-根目录的 .htaccess 中添加：
-<FilesMatch "^(data|data\.json|stats\.json)$">
-    Order Allow,Deny
-    Deny from all
-</FilesMatch>
