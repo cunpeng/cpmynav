@@ -94,7 +94,6 @@ docker run -d --name cpmynav_app -p 8821:80 -v cpmynav_data:/data -e TZ=Asia/Sha
 ## 📦 使用 Docker Compose
 ```yaml
 services:
-  services:
   cpmynav:
     build: .
     image: cunpeng/cpmynav:1.1
