@@ -16,8 +16,7 @@ ENV TZ=Asia/Shanghai
 
 # Apache配置
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-    && a2enmod rewrite \
-    && sed -i 's/Listen 80/Listen 8821/' /etc/apache2/ports.conf
+    && a2enmod rewrite
 
 # 复制Apache配置
 COPY apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
@@ -40,7 +39,7 @@ COPY start.sh /start.sh
 RUN sed -i 's/\r$//' /start.sh && chmod +x /start.sh
 
 # 暴露端口
-EXPOSE 8821
+EXPOSE 80
 
 # 使用启动脚本
 CMD ["/start.sh"]
