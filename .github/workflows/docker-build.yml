@@ -1,38 +1,41 @@
-name: Build and Push Multi-Arch Image
+name: Build and Push Multi-Arch Image (Manual Version)
 
 on:
-  push:
-    branches: [ main ]
-
-env:
-  IMAGE_NAME: cpmynav             # 只写镜像名
-  DOCKERHUB_USERNAME: cunpeng
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '镜像版本号（例如 1.1）'
+        required: true
+        default: '1.1'
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5   # 升级到 v5
+        uses: actions/checkout@v4
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4   # 升级到 v4
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4   # 升级到 v4
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v4   # 升级到 v4
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push
-        uses: docker/build-push-action@v7   # 升级到 v7
+        uses: docker/build-push-action@v5
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:1.1
+            ${{ secrets.DOCKERHUB_USERNAME }}/cpmynav:${{ github.event.inputs.version }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/cpmynav:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
