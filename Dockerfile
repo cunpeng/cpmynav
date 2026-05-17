@@ -14,9 +14,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # 设置时区
 ENV TZ=Asia/Shanghai
 
-# Apache配置
+# Apache配置 - 只监听8821
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
     && echo "Listen 8821" > /etc/apache2/ports.conf \
+    && sed -i 's/Listen 80/Listen 8821/g' /etc/apache2/apache2.conf \
+    && rm -f /etc/apache2/conf-available/ssl.conf \
+    && rm -f /etc/apache2/sites-enabled/*.conf \
     && a2enmod rewrite
 
 # 复制Apache配置（已预设8821端口）
