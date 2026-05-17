@@ -10,6 +10,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     restart: unless-stopped
+    stop_grace_period: 10s
     container_name: cpmynav_app
 
 volumes:

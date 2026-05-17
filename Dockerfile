@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-# 安装 bash 和必要的工具
+# 安装 tini 和必要的工具
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apache2 \
     libicu-dev \
@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     iproute2 \
     nano \
+    tini \
     && docker-php-ext-install intl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -45,5 +46,6 @@ RUN sed -i 's/\r$//' /start.sh && chmod +x /start.sh
 # 暴露端口
 EXPOSE 80
 
-# 使用启动脚本
+# 使用 tini 启动
+ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["/start.sh"]
