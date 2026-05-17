@@ -16,10 +16,10 @@ ENV TZ=Asia/Shanghai
 
 # Apache配置
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-    && sed -i 's/Listen 80/Listen 8821/' /etc/apache2/ports.conf \
+    && echo "Listen 8821" > /etc/apache2/ports.conf \
     && a2enmod rewrite
 
-# 复制Apache配置
+# 复制Apache配置（已预设8821端口）
 COPY apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # 创建数据目录
