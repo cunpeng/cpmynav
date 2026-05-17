@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# 安装必要的工具
+# 安装工具
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libicu-dev \
     tzdata \
@@ -11,39 +11,33 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# 设置时区
 ENV TZ=Asia/Shanghai
 
-# Apache配置 - 只监听8821
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-    && echo "Listen 8821" > /etc/apache2/ports.conf \
-    && sed -i 's/Listen 80/Listen 8821/g' /etc/apache2/apache2.conf \
-    && rm -f /etc/apache2/conf-available/ssl.conf \
-    && rm -f /etc/apache2/sites-enabled/*.conf \
-    && a2enmod rewrite
+# 1. 修改 ports.conf：只监听 8821
+RUN echo "Listen 8821" > /etc/apache2/ports.conf
 
-# 复制Apache配置（已预设8821端口）
+# 2. 复制站点配置
 COPY apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# 创建数据目录
+# 3. 启用站点，并启用 rewrite 模块
+RUN a2ensite 000-default.conf && a2enmod rewrite
+
+# 4. 设置 ServerName 避免启动警告
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# 5. 创建数据目录
 RUN mkdir -p /data/backups && \
     chown -R www-data:www-data /data && \
     chmod -R 775 /data
 
-# 复制应用程序文件
+# 6. 复制 PHP 应用
 COPY src/ /var/www/html/
-
-# 设置web目录权限
 RUN chown -R www-data:www-data /var/www/html/ && \
     find /var/www/html/ -type d -exec chmod 755 {} \; && \
     find /var/www/html/ -type f -exec chmod 644 {} \;
 
-# 复制启动脚本并修复换行符
-COPY start.sh /start.sh
-RUN sed -i 's/\r$//' /start.sh && chmod +x /start.sh
-
-# 暴露端口
+# 7. 只暴露 8821
 EXPOSE 8821
 
-# 使用启动脚本
-CMD ["/start.sh"]
+# 8. 使用官方前台启动命令
+CMD ["apache2-foreground"]
