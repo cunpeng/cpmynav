@@ -1,14 +1,12 @@
-FROM php:8.2-fpm
+FROM php:8.2-apache
 
-# 安装 tini 和必要的工具
+# 安装必要的工具
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    apache2 \
     libicu-dev \
     tzdata \
     ca-certificates \
     iproute2 \
     nano \
-    tini \
     && docker-php-ext-install intl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -17,11 +15,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV TZ=Asia/Shanghai
 
 # Apache配置
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-RUN a2enmod rewrite
-RUN a2enmod proxy_fcgi
-RUN a2enmod proxy
-RUN a2enmod proxy_http
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
+    && a2enmod rewrite
 
 # 复制Apache配置
 COPY apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
@@ -46,6 +41,5 @@ RUN sed -i 's/\r$//' /start.sh && chmod +x /start.sh
 # 暴露端口
 EXPOSE 80
 
-# 使用 tini 启动
-ENTRYPOINT ["/usr/bin/tini", "--"]
+# 使用启动脚本
 CMD ["/start.sh"]
