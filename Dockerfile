@@ -1,37 +1,45 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 
-# 安装 Apache
-RUN apk add --no-cache apache2 apache2-proxy apache2-mod-php82 \
-    && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && echo "Asia/Shanghai" > /etc/timezone
+# 安装必要的工具
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libicu-dev \
+    tzdata \
+    ca-certificates \
+    iproute2 \
+    nano \
+    && docker-php-ext-install intl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
+# 设置时区
 ENV TZ=Asia/Shanghai
 
-# 配置 Apache：只监听 8821
-RUN sed -i 's/Listen 80/Listen 8821/g' /etc/apache2/httpd.conf \
-    && sed -i 's/:80>/:8821>/g' /etc/apache2/httpd.conf \
-    && sed -i 's/DocumentRoot "\/var\/www\/localhost\/htdocs"/DocumentRoot "\/var\/www\/html"/g' /etc/apache2/httpd.conf
+# Apache配置
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
+    && a2enmod rewrite
 
-# 复制虚拟主机配置
-COPY apache-config/000-default.conf /etc/apache2/conf.d/000-default.conf
+# 复制Apache配置
+COPY apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # 创建数据目录
-RUN mkdir -p /data/backups \
-    && chown -R apache:apache /data \
-    && chmod -R 775 /data
+RUN mkdir -p /data/backups && \
+    chown -R www-data:www-data /data && \
+    chmod -R 775 /data
 
-# 复制 PHP 应用
+# 复制应用程序文件
 COPY src/ /var/www/html/
-RUN chown -R apache:apache /var/www/html/ \
-    && find /var/www/html/ -type d -exec chmod 755 {} \; \
-    && find /var/www/html/ -type f -exec chmod 644 {} \;
 
-# 复制启动脚本
+# 设置web目录权限
+RUN chown -R www-data:www-data /var/www/html/ && \
+    find /var/www/html/ -type d -exec chmod 755 {} \; && \
+    find /var/www/html/ -type f -exec chmod 644 {} \;
+
+# 复制启动脚本并修复换行符
 COPY start.sh /start.sh
-RUN chmod +x /start.sh
+RUN sed -i 's/\r$//' /start.sh && chmod +x /start.sh
 
-# 只暴露 8821
-EXPOSE 8821
+# 暴露端口
+EXPOSE 80
 
-# 启动
+# 使用启动脚本
 CMD ["/start.sh"]

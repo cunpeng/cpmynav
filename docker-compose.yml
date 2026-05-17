@@ -1,10 +1,10 @@
 services:
   cpmynav:
     build: .
-    image: cunpeng/cpmynav:1.13
+    image: cunpeng/cpmynav:1.1
     platform: linux/arm64  # 支持ARM64架构，如需AMD64改为 linux/amd64
     ports:
-      - "8821:8821"
+      - "8821:80"
     volumes:
       - cpmynav_data:/data
     environment:
