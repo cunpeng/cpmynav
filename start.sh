@@ -1,6 +1,9 @@
 #!/bin/bash
 # 启动脚本 - 支持Apache和Nginx双Web服务器
 
+# 信号处理 - 优雅关闭
+trap 'echo "收到停止信号，正在关闭..."; kill -TERM 1; exit 0;' SIGTERM SIGINT
+
 # 设置时区（如果设置了TZ环境变量）
 if [ -n "$TZ" ]; then
     echo "设置时区: $TZ"
